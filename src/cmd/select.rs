@@ -41,6 +41,8 @@ Common options:
     -n, --no-headers       When set, the first row will not be interpreted
                            as headers. (i.e., They are not searched, analyzed,
                            sliced, etc.)
+    --flexible             Continue even if the number of columns is different
+                           from the previous record.
     -d, --delimiter <arg>  The field delimiter for reading CSV data.
                            Must be a single character. (default: ,)
 "#;
@@ -59,6 +61,7 @@ struct Args {
     arg_selection:   SelectColumns,
     flag_output:     Option<String>,
     flag_no_headers: bool,
+    flag_flexible: bool,
     flag_delimiter:  Option<Delimiter>,
 }
 
@@ -68,6 +71,7 @@ pub fn run(argv: &[&str]) -> CliResult<()> {
     let rconfig = Config::new(&args.arg_input)
         .delimiter(args.flag_delimiter)
         .no_headers(args.flag_no_headers)
+        .flexible(args.flag_flexible)
         .select(args.arg_selection);
 
     let mut rdr = rconfig.reader()?;
